@@ -121,4 +121,7 @@ If authentication or permission fails, explain the specific missing access and
 ask the user to reconnect or adjust it. Do not silently switch accounts or
 credentials. CLI exit code 2 (`authentication_required` / `session_expired`)
 means the stored session is gone: ask the user to run `stashr login`
-interactively, or to provide `STASHR_API_KEY` for headless use.
+interactively, or to provide `STASHR_API_KEY` for headless use. A
+`payment_required` (402) error means agent access needs a Stashr Pro plan or
+an active trial — tell the user to check https://stashr.me/settings/billing;
+do not retry.
