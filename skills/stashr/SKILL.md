@@ -19,6 +19,11 @@ Resolve the transport once per session, then reuse it:
 3. If neither works, explain the missing setup. Recommend hosted MCP for an
    interactive AI client and the CLI for terminal agents or scripts.
 
+If the CLI rejects a documented option or command as unknown (for example
+`--compact`, `--rank`, or `media`), the installed binary is outdated. Ask the
+user to update it (`bun add -g @stashr/cli` or `npm i -g @stashr/cli`) instead
+of silently dropping the option.
+
 Do not check both transports before every request. Do not ask the user to paste
 an API key into chat.
 
@@ -32,8 +37,11 @@ Follow this sequence unless the user asks for a specific item:
 4. Inspect selected images only when their pixels matter to the answer.
 5. Follow `nextCursor` only when the current page is insufficient.
 
-Start with at most 10 discovery results. Return useful titles and source links
-to the user rather than dumping transport JSON.
+Start with at most 10 discovery results (`--limit 10`). Continue a page by
+passing the returned cursor back: MCP `cursor: "<nextCursor>"`, CLI
+`--cursor "<nextCursor>"` — always to the same command and mode that produced
+it. Return useful titles and source links to the user rather than dumping
+transport JSON.
 
 ### Search text and posts
 
@@ -45,6 +53,19 @@ to the user rather than dumping transport JSON.
 
 Search and list results contain bounded `text` snippets. Do not use full CLI
 search/list JSON unless debugging a response contract.
+
+### Filter values
+
+- Platforms: `instagram`, `reddit`, `tiktok`, `twitter`, `web`, `youtube`.
+  X is `twitter`, never `x` (the CLI aliases `x` for convenience; the MCP and
+  API do not).
+- Content types: `article`, `comment`, `image`, `post`, `snippet`, `video` —
+  bare (`article`) or platform-scoped (`twitter:article`).
+- Authors: a username — bare (`naval`) or platform-scoped (`twitter:naval`).
+- Tags: exact tag names; check `list_tags` / `stashr tags --json` when unsure.
+
+Invalid filter values return a validation error naming the allowed values.
+Read it and correct the value; do not retry the same call.
 
 ### Search and inspect images
 
@@ -77,7 +98,7 @@ request. Report success only after the transport confirms it.
 | Save a public URL | `save_bookmark` | `stashr save <url> --json` |
 | Edit note, favorite, tags, or archive state | `update_bookmark` | `stashr update`, `stashr archive`, or `stashr restore` |
 | Inspect tag vocabulary | `list_tags` | `stashr tags --json` |
-| Manage collections | `manage_collection` | `stashr collections ...` |
+| Manage collections | `manage_collection` | `stashr collections list\|create\|update\|delete` |
 
 Saving is idempotent. Reuse the user's stated tag names; list tags first only
 when the vocabulary is ambiguous. Archive is reversible. Require explicit
@@ -98,4 +119,6 @@ does not delete its bookmarks.
 
 If authentication or permission fails, explain the specific missing access and
 ask the user to reconnect or adjust it. Do not silently switch accounts or
-credentials.
+credentials. CLI exit code 2 (`authentication_required` / `session_expired`)
+means the stored session is gone: ask the user to run `stashr login`
+interactively, or to provide `STASHR_API_KEY` for headless use.
