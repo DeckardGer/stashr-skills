@@ -1,0 +1,4 @@
+interface:
+  display_name: "Stashr"
+  short_description: "Search and organize your saved library"
+  default_prompt: "Use $stashr to find and work with items in my saved library."
