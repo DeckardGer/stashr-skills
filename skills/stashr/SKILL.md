@@ -21,8 +21,8 @@ Resolve the transport once per session, then reuse it:
    interactive AI client and the CLI for terminal agents or scripts.
 
 If the CLI rejects a documented option or command as unknown (for example
-`stats`, `--since`, `--untagged`, or `--raw`), the installed binary is
-outdated. Ask the user to update it (`bun add -g @stashr/cli` or
+`stats`, `--since`, `--fields`, `--raw`, or multiple ids passed to `get`),
+the installed binary is outdated. Ask the user to update it (`bun add -g @stashr/cli` or
 `npm i -g @stashr/cli`) instead of silently dropping the option.
 
 Do not check both transports before every request. Do not ask the user to paste
@@ -34,7 +34,10 @@ Follow this sequence unless the user asks for a specific item:
 
 1. Search or browse compact results.
 2. Keep the result IDs, media refs, source URLs, and `nextCursor` internally.
-3. Fetch the full content of only the result or small shortlist needed.
+3. Fetch the full content of only the result or small shortlist needed. For a
+   shortlist of 2–20, use one batch call instead of one fetch per id: MCP
+   `fetch_many` with `ids`, CLI `stashr get <id> <id> … --json`. Both return
+   the same full documents plus a `missing` list for ids that were not found.
 4. Inspect selected images only when their pixels matter to the answer.
 5. Follow `nextCursor` only when the current page is insufficient.
 
@@ -49,9 +52,12 @@ than dumping transport JSON.
 
 ### Search text and posts
 
-- MCP: call `search` with `rankMode: "post"`; call `fetch` for selected IDs.
+- MCP: call `search` with `rankMode: "post"`; call `fetch` for one selected
+  ID or `fetch_many` for a shortlist.
 - CLI: run `stashr search "<query>" --compact --json`; run
-  `stashr get <bookmark-id> --json` for selected IDs.
+  `stashr get <bookmark-id> --json` for selected IDs (several ids in one
+  call for a shortlist). When only a few fields matter, add
+  `--fields id,title,url` to any JSON output to keep it small.
 - Use `list_bookmarks` or `stashr list --compact --json` for newest-first
   browsing and structured filters, not semantic questions.
 - The archive is searchable too: pass `state: "archived"` (or `"all"`), CLI
