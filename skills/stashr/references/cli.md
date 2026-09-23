@@ -39,6 +39,9 @@ dropping the option.
 - Continue a page with `--cursor "<nextCursor>"` on the same command.
 - Choose archived or all bookmarks with `--state archived` or `--state all`.
 - Keep output small with `--fields id,title,url` on any JSON output.
+- `stashr tags --json` is alphabetical and can run to thousands of entries.
+  For most-used tags, sort and trim before reading it:
+  `stashr tags --json --fields name,count | jq 'sort_by(-.count) | .[:10]'`.
 - `get --raw` returns the underlying Portable Text blocks; use it only when the
   user needs the raw structure.
 - `stashr list` has no collection option: read a collection by passing its
