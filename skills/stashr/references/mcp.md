@@ -13,7 +13,7 @@ tool names.
 | Full content for a shortlist of 2–20 | `fetch_many` with `ids` (returns a `missing` list) |
 | View selected images | `view_media` (up to four refs from one bookmark) |
 | Counts and breakdowns | `library_stats` |
-| Tag vocabulary with usage counts | `list_tags` |
+| Tag vocabulary with usage counts | `list_tags` (most-used first, paged; `query` finds tags by name) |
 | Plan, trial, and quota | `get_account` |
 | Save a public URL | `save_bookmark` |
 | Edit note, favorite, tags, or archive state | `update_bookmark` |
