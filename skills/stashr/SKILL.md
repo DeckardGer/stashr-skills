@@ -72,10 +72,10 @@ remote-only images and videos can remain metadata-only.
 
 ## Filter values
 
-- Platforms: `instagram`, `reddit`, `tiktok`, `twitter`, `web`, `youtube`.
-  X is `twitter`.
-- Content types: `article`, `comment`, `image`, `post`, `snippet`, `video` —
-  bare (`article`) or platform-scoped (`twitter:article`).
+- Platforms: `facebook`, `github`, `instagram`, `reddit`, `linkedin`, `tiktok`,
+  `twitter`, `web`, `youtube`, `hackernews`. X is `twitter`.
+- Content types: `article`, `comment`, `event`, `image`, `listing`, `page`, `post`,
+  `repo`, `snippet`, `video` — bare (`article`) or platform-scoped (`twitter:article`).
 - Authors: a username — bare (`naval`) or platform-scoped (`twitter:naval`).
 - Tags: exact tag names; list tags when unsure. Filter untagged bookmarks
   with the untagged filter, not an empty tag.
